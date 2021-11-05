@@ -22,8 +22,8 @@ public class MultiplicationTest {
 
     @Test
     public void testCurrency() {
-        assertEquals("USD", Money.dollar(1).currency());
-        assertEquals("CHF", Money.franc(1).currency());
+        assertEquals(Currency.USD, Money.dollar(1).currency());
+        assertEquals(Currency.CHF, Money.franc(1).currency());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class MultiplicationTest {
         Money five = Money.dollar(5);
         Expression sum = five.plus(five);
         Bank bank = new Bank();
-        Money reduced = bank.reduce(sum, "USD");
+        Money reduced = bank.reduce(sum, Currency.USD);
         assertEquals(Money.dollar(10), reduced);
     }
 
@@ -48,14 +48,36 @@ public class MultiplicationTest {
     public void testReduceSum() {
         Expression sum = new Sum(Money.dollar(3), Money.dollar(4));
         Bank bank = new Bank();
-        Money result = bank.reduce(sum, "USD");
+        Money result = bank.reduce(sum, Currency.USD);
         assertEquals(Money.dollar(7), result);
     }
 
     @Test
     public void testReduceMoney() {
         Bank bank = new Bank();
-        Money result = bank.reduce(Money.dollar(1), "USD");
+        Money result = bank.reduce(Money.dollar(1), Currency.USD);
         assertEquals(Money.dollar(1), result);
+    }
+
+    @Test
+    public void testReduceMoneyDifferentCurrency() {
+        Bank bank = new Bank();
+        bank.addRate(Currency.CHF, Currency.USD, 2);
+        Money result = bank.reduce(Money.franc(2), Currency.USD);
+    }
+
+    @Test
+    public void testArrayEquals() {
+        assertArrayEquals(new Object[] {"abc"}, new Object[] {"abc"});
+    }
+
+    @Test
+    public void testIdentityRate() {
+        assertEquals(1, new Bank().rate(Currency.USD, Currency.USD));
+    }
+
+    @Test
+    public void testMixedAddition() {
+        
     }
 }

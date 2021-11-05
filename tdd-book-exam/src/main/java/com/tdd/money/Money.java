@@ -3,9 +3,9 @@ package com.tdd.money;
 public class Money implements Expression {
 
     int amount;
-    String currency;
+    Currency currency;
 
-    public Money(int amount, String currency) {
+    public Money(int amount, Currency currency) {
         this.amount = amount;
         this.currency = currency;
     }
@@ -14,8 +14,9 @@ public class Money implements Expression {
         return new Sum(this, addend);
     }
 
-    public Money reduce(String to) {
-        return this;
+    public Money reduce(Bank bank, Currency to) {
+        int rate = bank.rate(currency, to);
+        return new Money(amount / rate, to);
     }
 
     public Money times(int multiplier) {
@@ -23,21 +24,21 @@ public class Money implements Expression {
     }
 
     static Money dollar(int amount) {
-        return new Money(amount, "USD");
+        return new Money(amount, Currency.USD);
     }
 
     static Money franc(int amount) {
-        return new Money(amount, "CHF");
+        return new Money(amount, Currency.CHF);
     }
 
-    public String currency() {
+    public Currency currency() {
         return this.currency;
     }
 
     public boolean equals(Object object) {
         Money money = (Money) object;
 
-        return amount == money.amount && currency().equals(money.currency);
+        return amount == money.amount && currency() == money.currency;
     }
 
     public String toString() {
