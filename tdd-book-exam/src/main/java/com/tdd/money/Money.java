@@ -10,7 +10,7 @@ public class Money implements Expression {
         this.currency = currency;
     }
 
-    public Expression plus(Money addend) {
+    public Expression plus(Expression addend) {
         return new Sum(this, addend);
     }
 
@@ -19,7 +19,7 @@ public class Money implements Expression {
         return new Money(amount / rate, to);
     }
 
-    public Money times(int multiplier) {
+    public Expression times(int multiplier) {
         return new Money(amount * multiplier, currency);
     }
 

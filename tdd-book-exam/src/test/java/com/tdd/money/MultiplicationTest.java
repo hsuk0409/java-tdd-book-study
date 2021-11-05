@@ -78,6 +78,36 @@ public class MultiplicationTest {
 
     @Test
     public void testMixedAddition() {
-        
+        Expression fiveBuckets = Money.dollar(5);
+        Expression tenFrancs = Money.franc(10);
+        Bank bank = new Bank();
+        bank.addRate(Currency.CHF, Currency.USD, 2);
+
+        Money result = bank.reduce(fiveBuckets.plus(tenFrancs), Currency.USD);
+        assertEquals(Money.dollar(10), result);
+    }
+
+    @Test
+    public void testSumPlusMoney() {
+        Expression fiveBuckets = Money.dollar(5);
+        Expression tenFranc = Money.franc(10);
+        Bank bank = new Bank();
+        bank.addRate(Currency.CHF, Currency.USD, 2);
+
+        Expression sum = new Sum(fiveBuckets, tenFranc).plus(fiveBuckets);
+        Money result = bank.reduce(sum, Currency.USD);
+        assertEquals(Money.dollar(15), result);
+    }
+
+    @Test
+    public void testSumTimes() {
+        Expression fiveBuckets = Money.dollar(5);
+        Expression tenFranc = Money.franc(10);
+        Bank bank = new Bank();
+        bank.addRate(Currency.CHF, Currency.USD, 2);
+
+        Expression sum = new Sum(fiveBuckets, tenFranc).times(2);
+        Money result = bank.reduce(sum, Currency.USD);
+        assertEquals(Money.dollar(20), result);
     }
 }
